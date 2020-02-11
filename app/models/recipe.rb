@@ -15,8 +15,12 @@ class Recipe < ActiveRecord::Base
         self.all.find do |recipe| 
             if recipe.name.downcase == name.downcase  
                 recipe_id = recipe.id
-                binding.pry
-                arr = RecipeIngredient.all.select {|ele| ele.recipe_id == recipe_id}.flat_map {|ele| [ele.ingredient_id, ele.quantity]}
+                arr = RecipeIngredient.all.select {|ele| ele.recipe_id == recipe_id}.map {|ele| ["#{ele.ingredient_name} ---> ", "#{ele.quantity}\n"]}
+                puts "Your recipe for #{name.upcase} is as follows -->\n\n"
+                puts arr.join
+                puts "\n"
+                puts "------------------------------------------------------------"
+                puts "\n"
             end 
         end
     end 
