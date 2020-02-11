@@ -1,6 +1,6 @@
 require_relative '../config/environment.rb'
-
 require 'tty-prompt'
+
 
 puts " 
                                                                             
@@ -21,9 +21,20 @@ selection = @prompt.select("What would you like to do?", [
     "Delete a recipe"
 ])
 
-    puts "\n"
-    puts "----------------------------------------------------------------"
-    puts "\n"
+puts "\n\n" 
+
+def get_ingredient_id(name)
+    Ingredient.all.find { |ingredient| 
+        ingredient.name.downcase == name.downcase ||
+        ingredient.name.downcase + "s" == name.downcase ||
+        ingredient.name.downcase + " " == name.downcase  
+    }.id
+end 
+
+def get_recipe_id(name)
+    recipe_id = Recipe.all.find {|recipe| recipe.name == name}.id
+end 
+
 
 if selection == "Create a new recipe"
     ingredient_array = []
@@ -51,10 +62,6 @@ if selection == "Create a new recipe"
     puts "------------------------------------------------------------"
     puts "\n"
 
-    def get_ingredient_id(name)
-        Ingredient.all.find {|ingredient| ingredient.name == name}.id
-    end 
-
     recipe_array = []
     ingredient_array.each do |ingredient|
         quantity = @prompt.ask("What quantity of #{ingredient} will you use? --> ")
@@ -74,13 +81,65 @@ end
 
 
 if selection == "View an existing recipe"
-    @prompt = TTY::Prompt.new
-    recipe_name = @prompt.ask("Which recipe would you like to view?")
+    puts "\n\n"
+    puts "------------------------------------------------------------"
     puts "\n"
-    Recipe.find_recipe(recipe_name)
-    # recipe = Recipe.list_recipes
-    # recipe_name = @prompt.ask('Which recipe would you like to adjust?', recipes)
+    selection = @prompt.select("What did you have in mind?\n", [
+        "Search for a specific recipe", 
+        "View all my recipes" 
+    ])
+
+    if selection == "Search for a specific recipe"
+        puts "\n"
+        recipe_name = @prompt.ask("Which recipe would you like to view?")
+        puts "\n"
+        Recipe.print_recipe(recipe_name)
+    end
+
+    if selection == "View all my recipes"
+        puts "\n"
+        recipe_name = @prompt.select("Select a recipe", Recipe.populate_recipe_list)
+        puts "\n"
+        Recipe.print_recipe(recipe_name)
+    end 
 end
+
+if selection == "Update a recipe"
+    puts "\n\n"
+    puts "------------------------------------------------------------"
+    puts "\n"
+    recipe_name = @prompt.select("Select a recipe to update", Recipe.populate_recipe_list)
+    puts "\n"
+    Recipe.print_recipe(recipe_name)
+
+    selection = @prompt.select("What would you like to do?", [
+        "Add an ingredient",
+        "Delete an ingredient", 
+        "Update a quantity"
+    ])
+
+    puts "\n"
+
+    if selection == "Add an ingredient"
+        recipe_id = get_recipe_id(recipe_name)
+        ingredient = @prompt.ask('Please add an ingredient, e.g. "carrots" --> ')
+        Ingredient.create_ingredient(ingredient)
+        quantity = @prompt.ask("What quantity of #{ingredient} will you use? --> ")
+        "\n"
+        ingredient_id = get_ingredient_id(ingredient)
+        RecipeIngredient.create_recipe_ingredient(recipe_id, ingredient_id, ingredient, quantity)
+        puts "\n"
+        puts "----- Recipe updated -----"
+    end
+
+    if selection == "Delete an ingredient"
+        ingredient = @prompt.ask('Please select an ingredient to remove --> ')
+        puts "\n"
+        puts "Removing #{ingredient} from #{recipe_name}"
+        binding.pry
+    end 
+
+end 
 
 
 

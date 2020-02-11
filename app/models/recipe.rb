@@ -4,14 +4,13 @@ class Recipe < ActiveRecord::Base
 
     def self.create_recipe(name)
         self.create(name: name)
-       # id = self.all.find {|recipe| if recipe.name == name ; return recipe.id} 
     end 
 
     def self.list_recipes
-        self.all.each {|recipe| puts recipe.name}
+        self.all.map {|recipe| recipe.name}
     end 
 
-    def self.find_recipe(name)
+    def self.print_recipe(name)
         self.all.find do |recipe| 
             if recipe.name.downcase == name.downcase  
                 recipe_id = recipe.id
@@ -25,9 +24,13 @@ class Recipe < ActiveRecord::Base
         end
     end 
 
-    def list_ingredients
-        # id = Recipe.all.find {|recipe| recipe.name == name}.id
-        # Recipe.find(id).ingredients # find_by
+    def self.populate_recipe_list 
+        self.list_recipes.sort.split
+    end 
+
+    def self.list_ingredients(name)
+        id = Recipe.all.find {|recipe| recipe.name == name}.id
+        Recipe.find(id).ingredients.map {|ingredient| ingredient.name}# find_by
         # Recipe.all.find_by name: self 
     end
 end
