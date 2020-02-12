@@ -30,7 +30,7 @@ class Recipe < ActiveRecord::Base
 
     def self.list_ingredients(name)
         id = Recipe.all.find {|recipe| recipe.name == name}.id
-        Recipe.find(id).ingredients.map {|ingredient| ingredient.name}# find_by
+        Recipe.find(id).ingredients.map {|ingredient| ingredient.name} #### DO FIND_BY HERE
         # Recipe.all.find_by name: self 
     end
 end

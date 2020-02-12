@@ -98,7 +98,7 @@ if selection == "View an existing recipe"
 
     if selection == "View all my recipes"
         puts "\n"
-        recipe_name = @prompt.select("Select a recipe", Recipe.populate_recipe_list)
+        recipe_name = @prompt.select("Select a recipe ", Recipe.populate_recipe_list)
         puts "\n"
         Recipe.print_recipe(recipe_name)
     end 
@@ -111,6 +111,7 @@ if selection == "Update a recipe"
     recipe_name = @prompt.select("Select a recipe to update", Recipe.populate_recipe_list)
     puts "\n"
     Recipe.print_recipe(recipe_name)
+    recipe_id = get_recipe_id(recipe_name)
 
     selection = @prompt.select("What would you like to do?", [
         "Add an ingredient",
@@ -121,7 +122,6 @@ if selection == "Update a recipe"
     puts "\n"
 
     if selection == "Add an ingredient"
-        recipe_id = get_recipe_id(recipe_name)
         ingredient = @prompt.ask('Please add an ingredient, e.g. "carrots" --> ')
         Ingredient.create_ingredient(ingredient)
         quantity = @prompt.ask("What quantity of #{ingredient} will you use? --> ")
@@ -129,17 +129,65 @@ if selection == "Update a recipe"
         ingredient_id = get_ingredient_id(ingredient)
         RecipeIngredient.create_recipe_ingredient(recipe_id, ingredient_id, ingredient, quantity)
         puts "\n"
-        puts "----- Recipe updated -----"
+        puts "----------- RECIPE UPDATED ------------"
+        puts "\n"
+        Recipe.print_recipe(recipe_name)
     end
 
+    def find_recipe_ingredient(recipe_id, ingredient_id)
+        RecipeIngredient.all.select {|re| re.recipe_id == recipe_id}.find {|ele| ele.ingredient_id == ingredient_id}
+    end 
+
+    def populate_ingredient_list(recipe_id)
+        RecipeIngredient.all.select {|ele| ele.recipe_id == recipe_id}.map {|e| e.ingredient_name}
+    end 
+
     if selection == "Delete an ingredient"
-        ingredient = @prompt.ask('Please select an ingredient to remove --> ')
+        ingredient = @prompt.select('Please select an ingredient to remove --> ', populate_ingredient_list(recipe_id))
+        ingredient_id = get_ingredient_id(ingredient)
+        find_recipe_ingredient(recipe_id, ingredient_id).delete
         puts "\n"
-        puts "Removing #{ingredient} from #{recipe_name}"
-        binding.pry
+        puts "\n"
+        puts "------------------ RECIPE UPDATED -----------------------"
+        puts "\n"
+        Recipe.print_recipe(recipe_name)
+    end 
+
+    if selection == "Update a quantity"
+        ingredient = @prompt.select('Please select an ingredient to update --> ', populate_ingredient_list(recipe_id))  
+        new_quantity = @prompt.ask('Enter your updated quantity --> ', )
+        ingredient_id = get_ingredient_id(ingredient)
+        find_recipe_ingredient(recipe_id, ingredient_id).update(quantity: new_quantity)
+        puts "\n"
+        puts "\n"
+        puts "------------------ RECIPE UPDATED -----------------------"
+        puts "\n"
+        Recipe.print_recipe(recipe_name)
     end 
 
 end 
+
+if selection == "Delete a recipe"
+    puts "\n\n"
+    puts "------------------------------------------------------------"
+    puts "\n"
+    recipe_name = @prompt.select("Select a recipe to update", Recipe.populate_recipe_list)
+    recipe_id = get_recipe_id(recipe_name)
+    puts "\n"
+    Recipe.print_recipe(recipe_name)
+    puts "\n\n"
+    delete = @prompt.yes?("Are you sure you want to delete?")
+    puts "\n"
+    if delete == true
+        Recipe.all.destroy(recipe_id)
+    end 
+    puts "\n"
+    puts "\n"
+    puts "------------------ RECIPE UPDATED -----------------------"
+    puts "\n"
+end
+
+
 
 
 
