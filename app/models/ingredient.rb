@@ -11,4 +11,13 @@ class Ingredient < ActiveRecord::Base
             self.create(name: name)
         end
     end  
+
+    def self.get_ingredient_id(name)
+        self.all.find { |ingredient| 
+            ingredient.name.downcase == name.downcase ||
+            ingredient.name.downcase + "s" == name.downcase ||
+            ingredient.name.downcase + " " == name.downcase  
+        }.id
+    end 
+    
 end
