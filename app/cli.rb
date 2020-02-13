@@ -27,18 +27,18 @@ class CLI
     end
     
     def main_menu
-        selection = @prompt.select("------------ MAIN MENU -----------", [
-            "Create a new recipe", 
-            "View an existing recipe", 
-            "Update a recipe", 
-            "Delete a recipe \n\n\n\n"
+        selection = @prompt.select("------------ MAIN MENU -----------\n\n", [
+            "Create a New Recipe", 
+            "View Recipe & Nutritional Info", 
+            "Update a Recipe", 
+            "Delete a Recipe \n\n\n\n"
         ])
 
-        if selection == "Create a new recipe"
+        if selection == "Create a New Recipe"
             new_recipe 
-        elsif selection == "View an existing recipe"
-            view_existing_recipe 
-        elsif selection == "Update a recipe" 
+        elsif selection == "View Recipe & Nutritional Info"
+            view_recipes_and_nutrition 
+        elsif selection == "Update a Recipe" 
             update_recipe 
         else 
             delete_recipe 
@@ -46,7 +46,7 @@ class CLI
     end
 
     def new_recipe 
-        recipe_name = @prompt.ask('What would you like to call this recipe? -->')
+        recipe_name = @prompt.ask('What would you like to call this recipe? -->').downcase
         Recipe.create_recipe(recipe_name)
         recipe_id = Recipe.get_recipe_id(recipe_name)
         ingredient_array = add_ingredients(recipe_id)
@@ -84,30 +84,14 @@ class CLI
         ingredient_array
     end 
 
-    def view_existing_recipe
+    def view_recipes_and_nutrition
         puts "\n\n"
         puts "------------------------------------------------------------"
-        puts "\n"
-        selection = @prompt.select("What did you have in mind?\n", [
-            "Search for a specific recipe", 
-            "View all my recipes" 
-        ])
-        selection == "Search for a specific recipe" ? search_specific_recipe : view_all_recipes
-        menu_or_exit 
-    end 
-
-    def search_specific_recipe
-        puts "\n"
-        recipe_name = @prompt.ask("Which recipe would you like to view?")
-        puts "\n"
-        Recipe.print_recipe(recipe_name)
-    end 
-
-    def view_all_recipes
         puts "\n"
         recipe_name = @prompt.select("Select a recipe ", Recipe.populate_recipe_list)
         puts "\n"
         Recipe.print_recipe(recipe_name)
+        menu_or_exit 
     end 
 
     def update_recipe
@@ -188,6 +172,7 @@ class CLI
             "Return to main menu", 
             "Exit application\n" 
         ])
+        puts "\n\n"
         selection == "Return to main menu" ? main_menu : exit_app
     end 
 

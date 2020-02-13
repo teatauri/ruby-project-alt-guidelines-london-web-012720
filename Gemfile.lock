@@ -31,6 +31,7 @@ GEM
       domain_name (~> 0.5)
     i18n (1.7.0)
       concurrent-ruby (~> 1.0)
+    json (2.3.0)
     method_source (0.9.2)
     mime-types (3.3.1)
       mime-types-data (~> 3.2015)
@@ -104,6 +105,7 @@ DEPENDENCIES
   activerecord (~> 5.2)
   catpix
   faker
+  json
   pry
   require_all
   rest-client
