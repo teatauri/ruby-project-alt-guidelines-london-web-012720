@@ -4,6 +4,14 @@ class Recipe < ActiveRecord::Base
 
     def self.create_recipe(name)
         self.create(name: name)
+        # @prompt = TTY::Prompt.new
+        # if self.list_recipes.include?(name)
+        #     puts "Opps! That name is already taken."
+        #     new_name = @prompt.ask('Choose another name --> ')
+        #     self.create(name: new_name)
+        # else 
+        #     self.create(name: name)
+        # end 
     end 
 
     def self.list_recipes
@@ -16,28 +24,13 @@ class Recipe < ActiveRecord::Base
             if recipe.name.downcase == name.downcase  
                 recipe_id = recipe.id
                 list = RecipeIngredient.all.select {|e| e.recipe_id == recipe_id}.map {|e| ["#{e.ingredient_name} ---> ", "#{e.quantity}\n"]}
-                puts "Your recipe for #{name.upcase} is as follows -->\n\n"
+                puts "Your recipe for  is as follows -->\n\n"
                 ingredients << list
                 puts ingredients.join
                 puts "\n------------------------------------------------------------"
             end 
         end  
-        self.call_api(name, ingredients)  
-    end 
-
-    def self.call_api(name, ingredients)
-        ingredientArray = ingredients.join.delete('--->').split(/\n/)
-        # binding.pry
-        body = { "title": name, "ingr": ingredientArray }.to_json
-        response = RestClient.post(
-            "https://api.edamam.com/api/nutrition-details?app_id=2f6b3adf&app_key=01bac796edcb5cb7823a8de1c2830769",
-            body,
-            { content_type: :json },
-        )
-        info = JSON.parse(response)
-        puts "Your recipe contains #{info['calories']} calories"
-        puts "\n\n"
-        puts "------------------------------------------------------------"
+        Api.call_api(name, ingredients)  
     end 
 
     def self.populate_recipe_list 

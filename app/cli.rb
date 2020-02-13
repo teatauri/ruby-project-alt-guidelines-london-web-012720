@@ -71,7 +71,7 @@ class CLI
 
     def add_ingredients(recipe_id)
         ingredient_array = []
-        ingredient = @prompt.ask('Please add an ingredient, e.g. "carrots" --> ')
+        ingredient = @prompt.ask('Please add an ingredient WITHOUT quantity, e.g. "carrots" --> ')
         ingredient_array << ingredient
         Ingredient.create_ingredient(ingredient)
         more = @prompt.yes?('Would you like to add another ingredient?')
