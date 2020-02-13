@@ -10,3 +10,4 @@ gem "faker"
 gem 'tty-prompt'
 gem 'catpix'
 gem 'tty-box'
+gem 'rest-client'

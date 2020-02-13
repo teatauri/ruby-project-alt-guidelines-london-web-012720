@@ -6,3 +6,5 @@ ActiveRecord::Base.logger = nil
 # require_all '../lib'
 # require_all '../app'
  require_all 'app'
+require 'rest-client'
+require 'json'

@@ -9,17 +9,19 @@ class CLI
     end
   
     def start
-        # Catpix::print_image "./recipe.jng",
-        # :limit_x => 1.0,
-        # :limit_y => 0,
-        # :center_x => true,
-        # :center_y => true,
-        # :bg => "white",
-        # :bg_fill => true,
-        # :resolution => "low"
-        puts "                                                                             
-    =============================== The Calorie-Counter ==================================                                                                      
-                                                                                                        
+        puts "               
+        
+        
+  _______  _______  ___      _______  ______    ___   _______    _______  _______  __   __  __   __  _______  __    _  ______   _______  ______   
+ |       ||   _   ||   |    |       ||    _ |  |   | |       |  |       ||       ||  |_|  ||  |_|  ||   _   ||  |  | ||      | |       ||    _ |  
+ |       ||  |_|  ||   |    |   _   ||   | ||  |   | |    ___|  |       ||   _   ||       ||       ||  |_|  ||   |_| ||  _    ||    ___||   | ||  
+ |       ||       ||   |    |  | |  ||   |_||_ |   | |   |___   |       ||  | |  ||       ||       ||       ||       || | |   ||   |___ |   |_||_ 
+ |      _||       ||   |___ |  |_|  ||    __  ||   | |    ___|  |      _||  |_|  ||       ||       ||       ||  _    || |_|   ||    ___||    __  |
+ |     |_ |   _   ||       ||       ||   |  | ||   | |   |___   |     |_ |       || ||_|| || ||_|| ||   _   || | |   ||       ||   |___ |   |  | |
+ |_______||__| |__||_______||_______||___|  |_||___| |_______|  |_______||_______||_|   |_||_|   |_||__| |__||_|  |__||______| |_______||___|  |_|
+ 
+ ===================================================== The Commandline Calorie-Counter ==========================================================                                                                     
+                                                                                                    
         "
         main_menu
     end
@@ -48,6 +50,8 @@ class CLI
         Recipe.create_recipe(recipe_name)
         recipe_id = Recipe.get_recipe_id(recipe_name)
         ingredient_array = add_ingredients(recipe_id)
+        puts "\n"
+        puts "------------------------------------------------------------\n"
         recipe_array = []
         ingredient_array.each do |ingredient|
             quantity = @prompt.ask("What quantity of #{ingredient} will you use? --> ")
@@ -77,6 +81,7 @@ class CLI
             ingredient_array << ingredient 
             more = @prompt.yes?('Would you like to add another ingredient?')
         end
+        ingredient_array
     end 
 
     def view_existing_recipe
@@ -130,11 +135,13 @@ class CLI
     def add_ingredient(recipe_id, recipe_name)
         ingredient = @prompt.ask('Please add an ingredient, e.g. "carrots" --> ')
         Ingredient.create_ingredient(ingredient)
+        puts "\n"
         quantity = @prompt.ask("What quantity of #{ingredient} will you use? --> ")
         ingredient_id = Ingredient.get_ingredient_id(ingredient)
         RecipeIngredient.create_recipe_ingredient(recipe_id, ingredient_id, ingredient, quantity)
         puts "\n"
         puts "------------------ RECIPE UPDATED -----------------------\n"
+        puts "\n"
         Recipe.print_recipe(recipe_name)
     end
 
