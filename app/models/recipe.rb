@@ -24,13 +24,13 @@ class Recipe < ActiveRecord::Base
             if recipe.name.downcase == name.downcase  
                 recipe_id = recipe.id
                 list = RecipeIngredient.all.select {|e| e.recipe_id == recipe_id}.map {|e| ["#{e.ingredient_name} ---> ", "#{e.quantity}\n"]}
-                puts "Your recipe for  is as follows -->\n\n"
+                puts "Your recipe for #{name.upcase} is as follows -->\n\n"
                 ingredients << list
                 puts ingredients.join
                 puts "\n------------------------------------------------------------"
             end 
         end  
-        Api.call_api(name, ingredients)  
+        #Api.call_api(name, ingredients)  
     end 
 
     def self.populate_recipe_list 

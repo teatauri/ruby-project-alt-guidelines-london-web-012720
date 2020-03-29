@@ -1,6 +1,6 @@
-require 'tty-prompt'
-require 'tty-box'
-require 'catpix'
+# require 'tty-prompt'
+# # require 'tty-box'
+# require 'catpix'
 
 class CLI
 
@@ -168,7 +168,7 @@ class CLI
     end
 
     def menu_or_exit 
-        selection = @prompt.select("What would you like to do next?", [
+        selection = @prompt.select("What would you like to do next?\n\n", [
             "Return to main menu", 
             "Exit application\n" 
         ])
